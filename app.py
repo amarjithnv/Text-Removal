@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import requests
 
 app = Flask(__name__)
 
@@ -51,6 +52,48 @@ def index():
     return render_template("index.html",
                            cleaned_text=cleaned_text,
                            original_text=original_text)
+
+
+@app.route("/scraper", methods=["GET", "POST"])
+def scraper():
+
+    processed_data = ""
+
+    if request.method == "POST":
+        # Collect inputs from form
+        txt_target_url = request.form.get("txt_target_url", "")
+        start_marker = request.form.get("start_marker", "")
+        end_marker = request.form.get("end_marker", "")
+
+        """txt_target_url = "https://keralaevents.in/education/kerala-school-sasthrolsavam-2025/"
+        start_marker ="<table>"
+        end_marker="</table>" """
+        try:
+            import requests
+            resp_cont = requests.get(txt_target_url).text
+
+        except Exception as e:
+            resp_cont = f"ERROR FETCHING URL: {e}"
+
+        extracted = ""
+
+        # Extract content between markers
+        start_marker = re.escape(start_marker)
+        end_marker = re.escape(end_marker)
+        pattern = f"({start_marker}(.*?){end_marker})"
+        
+        match = re.search(pattern, resp_cont, flags=re.DOTALL | re.IGNORECASE)
+        if match:
+            extracted = match.group()
+        else:
+            extracted = "No content found between given markers."
+
+        data = f"""
+        {extracted}"""
+
+        processed_data = data.strip()
+
+    return render_template("scraper.html", processed_data=processed_data)
 
 
 if __name__ == "__main__":
