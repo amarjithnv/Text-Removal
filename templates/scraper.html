@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper Data Input</title>
+    <style>
+        /* BASE LAYOUT: Using Flexbox for Sidebar and Main Content */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default body margin */
+            background-color: #f4f4f4;
+            display: flex; /* Activate Flexbox */
+            min-height: 100vh; /* Ensure full height */
+        }
+
+        /* SIDEBAR STYLES */
+        .sidebar {
+            width: 200px; /* Fixed width */
+            background-color: #343a40; /* Dark background */
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0; /* Prevents sidebar from shrinking */
+        }
+        .sidebar h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-bottom: 1px solid #495057;
+            padding-bottom: 10px;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav a {
+            display: block;
+            text-decoration: none;
+            color: #ced4da; /* Light gray text */
+            padding: 10px 0;
+            transition: background-color 0.2s, color 0.2s;
+            border-radius: 4px;
+        }
+        .sidebar-nav a:hover {
+            background-color: #495057; /* Slightly lighter background on hover */
+            color: white;
+            padding-left: 5px;
+        }
+        .sidebar-nav .active a {
+            color: #007bff; /* Highlight current page */
+            font-weight: bold;
+            background-color: #212529;
+        }
+
+        /* MAIN CONTENT STYLES */
+        .main-content-wrapper {
+            flex-grow: 1; /* Allows the content area to take up remaining space */
+            padding: 40px;
+        }
+        .container {
+            max-width: 600px;
+            /* margin: auto; - Removed for cleaner alignment within wrapper */
+            margin: 0; 
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* FORM COMPONENT STYLES (Kept from original) */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { resize: vertical; min-height: 150px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        <h3>Other Tools</h3>
+        <ul class="sidebar-nav">
+            <li class="active"><a href="{{ url_for('scraper') }}">Web Scraper</a></li>
+            <li><a href="/">Text Cleaner</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <h2>Web Data Extraction Tool</h2>
+            <form action="{{ url_for('scraper') }}" method="POST">
+                
+                <div class="form-group">
+                    <label for="url-input">Target URL</label>
+                    <span>https://mela.kite.kerala.gov.in/2025/state/index.php/result/Public_result/schoolwisePointdetailed/0/0/0/1</span>
+                    <input 
+                        type="text" 
+                        id="url-input" 
+                        name="txt_target_url" 
+                        placeholder="e.g., https://www.example.com" 
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="start-tag">Start Marker/Tag (XPath, CSS Selector, or Text)</label>
+                    <input 
+                        type="text" 
+                        id="start-tag" 
+                        name="start_marker" 
+                        placeholder="e.g., <div class='content'>" 
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="end-tag">End Marker/Tag (XPath, CSS Selector, or Text)</label>
+                    <input 
+                        type="text" 
+                        id="end-tag" 
+                        name="end_marker" 
+                        placeholder="e.g., </div>" 
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="data">Data</label>
+                    <textarea 
+                        id="data" 
+                        name="data" 
+                        rows="6" 
+                        placeholder="Processed Data Will Appear Here..."
+                    >{{ processed_data }}</textarea>
+                </div>
+
+                <button type="submit">Submit for Processing</button>
+                
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
